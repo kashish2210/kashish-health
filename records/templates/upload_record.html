@@ -3,10 +3,10 @@
 <head>
     <title>Upload Patient Record</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <link rel="stylesheet" href="{% static 'nav1.css' %}">
     <style>
         body {
-            background-image: url("{% static 'bg1.gif' %}");
+            background-image: url("{% static 'bg3.gif' %}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -16,7 +16,7 @@
         }
         .container {
             padding: 20px;
-            width: 100%%;
+            width: 100%;
             padding: 30px;
             border: 1px solid rgba(255, 255, 255, 0.5);
             backdrop-filter:blur(4px);
@@ -27,10 +27,10 @@
         }
         form {
             padding: 20px;
-            width: 100%%;
+            width: 85%;
             padding: 30px;
             border: 1px solid rgba(255, 255, 255, 0.5);
-            backdrop-filter:blur(14px);
+            backdrop-filter:blur(6px);
             border-radius:8px;
             display:flex;
             display:grid;
@@ -46,10 +46,15 @@
             border-radius:8px;
             display:flex;
             display:grid;
-            background-color: #89dc8a
+            background-color: #D4BEE4
         }
-        button { padding: 10px; background-color: #28a745; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+        button { padding: 10px; background-color: #D4BEE4; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
         button:hover { background-color: #218838; }
+        .time-box {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -68,14 +73,42 @@
         <li class="right"><a href="{% url 'upload' %}">File summarize</a></li>
         <li><a id="wallet-address" href="#">Wallet: Not connected</a></li>
     </ul>
-    <div class="container" >
+    
+    <div class="container">
         <h2>Upload Patient Record</h2>
+        
+        <!-- Display the current time -->
+        <div class="time-box" id="current-time"></div>
+        
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            
+            <!-- Add form fields (example: score input and image upload) -->
             {{ form.as_p }}
+            
+            <!-- Patient Score -->
+            <label for="patient_score">Patient Score:</label>
+            <input type="number" id="patient_score" name="patient_score" min="1" max="100" required>
+            
+            <!-- Image upload field -->
+            <label for="patient_image">Upload Patient Image:</label>
+            <input type="file" id="patient_image" name="patient_image" accept="image/*" required>
+            
             <button type="submit">Upload</button>
         </form>
     </div>
+
     <script src="{% static 'web3.js' %}"></script>
+
+    <!-- Script to show current time -->
+    <script>
+        function updateTime() {
+            const currentTime = new Date().toLocaleString();
+            document.getElementById('current-time').innerText = `Current Time: ${currentTime}`;
+        }
+
+        // Update the time every second
+        setInterval(updateTime, 1000);
+    </script>
 </body>
 </html>

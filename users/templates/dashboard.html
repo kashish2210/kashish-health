@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DASHBOARD</title>
-    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <link rel="stylesheet" href="{% static 'nav1.css' %}">
     <style>
         /* Background gif */
         body {
-            background-image: url("{% static 'bg1.gif' %}");
+            background-image: url("{% static 'bg3.gif' %}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -20,14 +20,26 @@
         div {
             background-color: rgba(173, 216, 230, 0.5); /* lightblue with opacity */
         }
-
     </style>
 </head>
 <body>
 
 <!-- Custom Navbar -->
 <ul>
-    <li><a class="active" href="{% url 'dashboard' %}">Welcome, {{ user.username }}</a></li>
+    {% if user.is_authenticated and not user.is_doctor %}
+        <!-- If the user is a patient and logged in, check angry count -->
+        {% if angry_count > 100 %}
+            <!-- If "angry" count is greater than 100, show Alert link -->
+            <li><a class="active" href="{% url 'alert' %}" style="color: white;">Alert</a></li>
+        {% else %}
+            <!-- Otherwise, show the welcome username -->
+            <li><a class="active" href="{% url 'dashboard' %}">Welcome, {{ user.username }}</a></li>
+        {% endif %}
+    {% else %}
+        <!-- Show the welcome username for doctors or if not a patient -->
+        <li><a class="active" href="{% url 'dashboard' %}">Welcome, {{ user.username }}</a></li>
+    {% endif %}
+    
     <li><a href="{% url 'view_records' %}">View Medical Records</a></li>
     {% if user.is_doctor %}
         <li><a href="{% url 'upload_record' %}">Upload Medical Record</a></li>
@@ -54,6 +66,7 @@
         {{ graph_html_3d|safe }}
     </div>
 </div>
+
 <script>
     window.onload = function () {
         var graphContainers = document.querySelectorAll('.graph-container');
@@ -62,6 +75,7 @@
         });
     };
 </script>
+
 <script src="{% static 'web3.js' %}"></script>
 
 </body>

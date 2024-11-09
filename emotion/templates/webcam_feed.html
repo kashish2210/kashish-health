@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emotion Detection</title>
-    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <link rel="stylesheet" href="{% static 'nav1.css' %}">
     <style>
         body {
-            background-image: url("{% static 'bg1.gif' %}");
+            background-image: url("{% static 'bg3.gif' %}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -17,7 +17,7 @@
             background-color: #89dc8a;
         }
         .container {
-            width: 100%%;
+            width: 100%;
             padding: 30px;
             border: 1px solid rgba(255, 255, 255, 0.5);
             backdrop-filter:blur(24px);
@@ -25,8 +25,28 @@
             display:flex;
             display:grid;
             margin: 50px auto;
-         }
+        }
+        /* Style for pop-up alert */
+        #alert-popup {
+            position: fixed;
+            top: 30%;
+            left: 30%;
+            background-color: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
     </style>
+    <script>
+        // Get the angry_count value passed from the server
+        const angryCount = {{ angry_count|default:0 }};
+
+        // Redirect to alert.html if angry_count exceeds 50
+        if (angryCount > 50) {
+            window.location.href = "{% url 'alert' %}";
+        }
+    </script>
 </head>
 <body>
     <ul>
@@ -39,15 +59,22 @@
             <li><a href="{% url 'dashboard' %}">Wallet: {{ user.wallet_address }}</a></li>
         {% endif %}
         <li class="right"><a href="{% url 'logout' %}" class="btn btn-danger">Logout</a></li>
+        {% if angry_count > 50 %}
+        <li class="right"><a href="{% url 'detect' %}">vid</a></li>
+    {% else %}
         <li class="right"><a href="{% url 'detect_emotion' %}">vid</a></li>
+    {% endif %}
         <li class="right"><a href="{% url 'dashboard' %}?reset=true" class="btn btn-warning">Reset Graphs</a></li>
         <li class="right"><a href="{% url 'upload' %}">File summarize</a></li>
         <li><a id="wallet-address" href="#">Wallet: Not connected</a></li>
     </ul>
+
     <div class="container">
         <h1>Real-Time Emotion Detection</h1>
-        <img src="{% url 'video_feed' %}" width="100%" alt="Video Feed">
+        <img src="{% url 'video_feed' %}" width="50%" alt="Video Feed">
     </div>
+
+
     <script src="{% static 'web3.js' %}"></script>
 </body>
 </html>

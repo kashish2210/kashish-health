@@ -6,10 +6,7 @@ if (window.innerWidth > 800) {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.shadowMap.needsUpdate = true;
-  //renderer.toneMapping = THREE.ReinhardToneMapping;
-  //console.log(window.innerWidth);
 };
-//---
 
 document.body.appendChild( renderer.domElement );
 
@@ -34,7 +31,7 @@ var uSpeed = 0.001;
 
 //----------------------------------------------------------------- FOG background
 
-var setcolor = 0xb2d99c;
+var setcolor = 0xD4BEE4;
 //var setcolor = 0xF2F111;
 //var setcolor = 0xFF6347;
 

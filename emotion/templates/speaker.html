@@ -1,0 +1,208 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'speaker.css' %}" />
+    <style>
+      /* Basic reset and global styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      /* Set the background */
+      body {
+        background-color: lavender;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      /* Canvas for the globe background */
+      #scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      /* Wrapper styling */
+      .wrapper {
+           padding: 20px;
+            width: 70%;
+            height: 80%;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter:blur(4px);
+            border-radius:8px;
+            display:flex;
+            display:grid;
+            margin: 50px auto;
+      }
+
+      /* Header styling */
+      header {
+        font-size: 36px;
+        color: #6a1b9a;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      /* Form styling */
+      form .row {
+        margin: 15px 0;
+      }
+
+      label {
+        display: block;
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 8px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 120px;
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #6a1b9a;
+        border-radius: 8px;
+        resize: none;
+      }
+
+      .outer select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #6a1b9a;
+        border-radius: 8px;
+        appearance: none;
+        background: #f5f5f5;
+        color: #333;
+      }
+
+      /* Button styling */
+      #speakButton,
+      #reset {
+        display: inline-block;
+        width: 48%;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        background: #6a1b9a;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: background 0.3s;
+      }
+
+      #reset {
+        background: #ff4081;
+      }
+
+      #speakButton:hover {
+        background: #5a1280;
+      }
+
+      #reset:hover {
+        background: #e03571;
+      }
+    </style>
+
+    <title>STORY TELLER</title>
+  </head>
+  <body onload="loadTextFromStorage()">
+    <canvas id="scene"></canvas>
+    <div class="wrapper">
+      <header>Story Teller</header>
+      <form action="#">
+        <div class="row">
+          <label>Enter Text</label>
+          <textarea id="textArea" placeholder="Write anything here..."></textarea>
+        </div>
+        <div class="row">
+          <label>Select Voice</label>
+          <div class="outer">
+            <select id="voiceSelect"></select>
+          </div>
+        </div>
+        <button type="button" id="speakButton">Convert To Speech</button>
+        <button type="button" id="reset" onclick="resetEverything()">Reset</button>
+      </form>
+    </div>
+
+    <script>
+      // Load text from localStorage when the page loads
+      function loadTextFromStorage() {
+        const textData = localStorage.getItem('textData');
+        if (textData) {
+          document.getElementById('textArea').value = textData;
+          localStorage.removeItem('textData');
+        }
+      }
+
+      // Reset function to clear textarea and selection
+      function resetEverything() {
+        document.getElementById('textArea').value = '';
+        document.getElementById('voiceSelect').selectedIndex = 0;
+        window.speechSynthesis.cancel(); // Stop any ongoing speech
+      }
+
+      const textArea = document.getElementById("textArea");
+      const voiceSelect = document.getElementById("voiceSelect");
+      const speakButton = document.getElementById("speakButton");
+
+      let voices = [];
+
+      // Load available voices and populate dropdown
+      function loadVoices() {
+        voices = window.speechSynthesis.getVoices();
+        voiceSelect.innerHTML = ''; // Clear previous options
+
+        voices.forEach((voice, index) => {
+          const option = document.createElement("option");
+          option.value = index;
+          option.textContent = `${voice.name} (${voice.lang})`;
+          voiceSelect.appendChild(option);
+        });
+      }
+
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+      }
+      loadVoices();
+
+      speakButton.addEventListener("click", () => {
+        const selectedVoiceIndex = voiceSelect.value;
+        const text = textArea.value;
+
+        if (text.trim() === "") {
+          alert("Please enter some text to convert to speech.");
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        if (selectedVoiceIndex) {
+          utterance.voice = voices[selectedVoiceIndex];
+        }
+
+        window.speechSynthesis.speak(utterance);
+      });
+    </script>
+    <script defer src="{% static 'globe.js' %}"></script>
+
+    <script src="{% static 'speaker.js' %}"></script>
+  </body>
+</html>
