@@ -1,0 +1,195 @@
+
+
+
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
+
+@property --a {
+    syntax: "<percentage>";
+    initial-value: 0%;
+    inherits: true;
+}
+
+.dark button {
+    --a: 0%;
+    --hue: 170deg;
+    --x: 50;
+    --y: 50;
+    --button: hsl(var(--hue), 66%, 66%);
+    --edge: 20px;
+    --size: 2em;
+    
+    background: transparent;
+    color: hsla(var(--hue), 80%, 30%, 0.7);
+    font-size: 1.8em;
+    position: relative;
+    padding: calc(var(--size)) calc(var(--size)*1.5);
+    animation: color 20s linear infinite both;
+    transition: 
+        --a .5s ease-in-out, 
+        scale var(--spring-duration) var(--spring-easing);
+    scale: 0.92;
+    isolation: isolate;
+    &:hover {
+        --a: 100%;
+        transition-duration: .5s, 1s;
+        box-shadow: none;
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+button:before {
+    content: "";
+    position: absolute;
+    inset: 0em;
+    /** here's the magic. A blur and a svg filter */
+    filter: blur(12px) url(#goo) drop-shadow(0 .25em .5em hsla(0deg, 0%, 0%, 0.8)); 
+    /** followed by a radial-gradient which causes the
+    gooey effect to follow mouse-position */
+    background-image:
+        linear-gradient(0deg,var(--button),var(--button)),
+        radial-gradient(
+            40% 70% at calc(var(--x) * 1%) calc(var(--y) * 1%),
+            hsla(var(--hue), 77%, 77%, var(--a)) 0%,
+            transparent 90%
+        );
+    /** and finally a background-clip so the radial-gradient
+    is larger than the linear-gradient */
+    background-clip: content-box, border-box;
+    padding: 24px;
+    z-index: -1;
+    border: inherit;
+    animation: color 20s linear infinite both;
+}
+
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Open Sans",sans-serif;
+}
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+}
+body::before{
+    content: "";
+    position: absolute;
+    height: 100%;
+    width:100%;
+    background: url(https://images.pexels.com/photos/5841756/pexels-photo-5841756.jpeg);
+    background-position: center;
+    background-size: cover;
+
+}
+
+.maincontainer{
+    width: 400px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter:blur(7px);
+    border-radius:8px;
+  display:flex;
+  display:grid;
+/*   height:440px */
+}
+form{
+    display: flex;
+    flex-direction: column;
+}
+form h2{
+    font-size: 2rem;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.input-field{
+    position: relative;
+    border-bottom: 2px solid #ccc;
+    margin: 15px 0;
+}
+.input-field input{
+    width: 100%;
+    height:40px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.input-field label{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    color: #fff;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: 0.3s ease-in;
+}
+
+.input-field input:focus~label,
+.input-field input:valid~label{
+    transform: translateY(-120%);
+    font-size: 0.8rem;
+    top: 10px;
+}
+
+.password-options{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 25px 0 35px 0;
+    color: #fff;
+}
+
+.password-options label{
+    display: flex;
+    align-items: center;
+
+}
+#remember{
+    accent-color: #fff;
+}
+.password-options label p{
+    margin-left: 8px;
+}
+
+.maincontainer a{
+    color: #efefef;
+    text-decoration: none;
+}
+.maincontainer a:hover{
+    text-decoration: underline;
+}
+
+button{
+    background-color: #fff;
+    color: #000;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 3px;
+    border:2px solid transparent ;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+button:hover{
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #fff;
+    color: #fff;
+}
+
+.account-options{
+    text-align: center;
+    margin-top: 30px;
+    color: #fff;
+}
+

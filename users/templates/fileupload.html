@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <style>
+        body {
+            background-image: url("{% static 'bg1.gif' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            font-size: 16px;
+            background-color: #89dc8a
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        form {
+            padding: 20px;
+            width: 100%%;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter:blur(14px);
+            border-radius:8px;
+            display:flex;
+            display:grid;
+        }
+        input[type="file"] {
+            display: block;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #2e2e2e;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: #ccc;
+        }
+        button {
+            width: 300px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%%;
+            height: 200px;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+            font-family: monospace;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter:blur(14px);
+            border-radius:8px;
+            display:flex;
+            display:grid;
+            overflow: scroll;
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Navbar -->
+<ul>
+    <li><a class="active" href="{% url 'dashboard' %}">Welcome, {{ user.username }}</a></li>
+    <li><a href="{% url 'view_records' %}">View Medical Records</a></li>
+    {% if user.is_doctor %}
+        <li><a href="{% url 'upload_record' %}">Upload Medical Record</a></li>
+    {% endif %}
+    {% if user.wallet_address %}
+    <li><a href="{% url 'dashboard' %}">Wallet: {{ user.wallet_address }}</a></li>
+    {% endif %}
+    <li class="right"><a href="{% url 'logout' %}" class="btn btn-danger">Logout</a></li>
+    <li class="right"><a href="{% url 'detect_emotion' %}">vid</a></li>
+    <li class="right"><a href="{% url 'dashboard' %}?reset=true" class="btn btn-warning">Reset Graphs</a></li>
+    <li class="right"><a href="{% url 'upload' %}">File summarize</a></li>
+    <li><a id="wallet-address" href="#">Wallet: Not connected</a></li>
+</ul>
+        <h1>Upload File</h1>
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="file" accept="application/pdf" />
+            <button type="submit">Upload</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            try {
+                const response = await fetch("{% url 'upload_file' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: formData
+                });
+
+                const resultContainer = document.getElementById('result');
+                if (response.ok) {
+                    const text = await response.text();
+                    resultContainer.innerHTML = text;
+                } else {
+                    resultContainer.innerHTML = 'File upload failed. Please try again.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = 'An error occurred. Please try again.';
+            }
+        });
+    </script>
+    <script src="{% static 'web3.js' %}"></script>
+</body>
+</html>
