@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection</title>
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <style>
+        body {
+            background-image: url("{% static 'bg1.gif' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            font-size: 16px;
+            background-color: #89dc8a;
+        }
+        .container {
+            width: 100%%;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter:blur(24px);
+            border-radius:8px;
+            display:flex;
+            display:grid;
+            margin: 50px auto;
+         }
+    </style>
+</head>
+<body>
+    <ul>
+        <li><a class="active" href="{% url 'dashboard' %}">Welcome, {{ user.username }}</a></li>
+        <li><a href="{% url 'view_records' %}">View Medical Records</a></li>
+        {% if user.is_doctor %}
+            <li><a href="{% url 'upload_record' %}">Upload Medical Record</a></li>
+        {% endif %}
+        {% if user.wallet_address %}
+            <li><a href="{% url 'dashboard' %}">Wallet: {{ user.wallet_address }}</a></li>
+        {% endif %}
+        <li class="right"><a href="{% url 'logout' %}" class="btn btn-danger">Logout</a></li>
+        <li class="right"><a href="{% url 'detect_emotion' %}">vid</a></li>
+        <li class="right"><a href="{% url 'dashboard' %}?reset=true" class="btn btn-warning">Reset Graphs</a></li>
+        <li class="right"><a href="{% url 'upload' %}">File summarize</a></li>
+        <li><a id="wallet-address" href="#">Wallet: Not connected</a></li>
+    </ul>
+    <div class="container">
+        <h1>Real-Time Emotion Detection</h1>
+        <img src="{% url 'video_feed' %}" width="100%" alt="Video Feed">
+    </div>
+    <script src="{% static 'web3.js' %}"></script>
+</body>
+</html>

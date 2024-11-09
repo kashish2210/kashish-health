@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emotion Graphs</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Emotion Analysis</h1>
+    <div id="graph-container">
+        <h2>2D Emotion Counts</h2>
+        <div>
+            {{ graph_html_2d|safe }}
+        </div>
+        <h2>3D Emotion Counts</h2>
+        <div>
+            {{ graph_html_3d|safe }}
+        </div>
+    </div>
+</body>
+</html>
