@@ -1,0 +1,14 @@
+opencv-python-headless
+mediapipe
+cvzone
+numpy
+plotly
+PyPDF2
+google-generativeai
+tensorflow
+keras
+djangorestframework
+django
+ipfshttpclient
+web3
+
