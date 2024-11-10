@@ -235,3 +235,110 @@ def alert(request):
 
 def multilingual(request):
     return render(request, 'speaker.html')
+
+from django.shortcuts import render
+import random
+import string
+import hashlib
+from cryptography.fernet import Fernet
+
+def generate_key_from_seed(seed: str) -> bytes:
+    # Convert seed to a 32-byte key using SHA-256 hashing
+    sha256 = hashlib.sha256()
+    sha256.update(seed.encode())
+    return Fernet.generate_key()
+
+def encrypt_data(data: str, key: bytes) -> bytes:
+    # Encrypt data
+    fernet = Fernet(key)
+    encrypted_data = fernet.encrypt(data.encode())
+    return encrypted_data
+
+def decrypt_data(encrypted_data: bytes, key: bytes) -> str:
+    # Decrypt data
+    fernet = Fernet(key)
+    decrypted_data = fernet.decrypt(encrypted_data)
+    return decrypted_data.decode()
+
+import os
+
+def geocite_interface(request):
+    seed = ''.join(random.choices(string.ascii_letters + string.digits, k=32))
+    key = generate_key_from_seed(seed)
+
+    # Example of data you want to encrypt
+    sensitive_data = "This is a sensitive piece of information."
+
+    # Encrypt the data
+    encrypted_data = encrypt_data(sensitive_data, key)
+
+    # Save encrypted data to a file (optional)
+    with open("encrypted_data.bin", "wb") as f:
+        f.write(encrypted_data)
+
+    # Pass seed to the template
+    return render(request, 'geocite.html', {'seed': seed})
+
+def decrypt_sensitive_data(seed: str):
+    key = generate_key_from_seed(seed)
+
+    # Load the encrypted data from file
+    with open("encrypted_data.bin", "rb") as f:
+        encrypted_data = f.read()
+
+    # Decrypt the data
+    decrypted_data = decrypt_data(encrypted_data, key)
+    return decrypted_data
+
+import os
+import hashlib
+from cryptography.fernet import Fernet
+
+# Define the path to your library folder
+LIBRARY_PATH = os.path.join("", "encryted_data")
+
+# Ensure the directory exists
+os.makedirs(LIBRARY_PATH, exist_ok=True)
+
+def generate_key_from_seed(seed: str) -> bytes:
+    # Convert seed to a 32-byte key using SHA-256 hashing
+    sha256 = hashlib.sha256()
+    sha256.update(seed.encode())
+    return Fernet.generate_key()
+
+def encrypt_data(data: str, key: bytes) -> bytes:
+    # Encrypt data
+    fernet = Fernet(key)
+    encrypted_data = fernet.encrypt(data.encode())
+    return encrypted_data
+
+def decrypt_data(encrypted_data: bytes, key: bytes) -> str:
+    # Decrypt data
+    fernet = Fernet(key)
+    decrypted_data = fernet.decrypt(encrypted_data)
+    return decrypted_data.decode()
+
+def save_encrypted_data(seed: str, data: str):
+    # Generate encryption key from the seed
+    key = generate_key_from_seed(seed)
+    # Encrypt the data
+    encrypted_data = encrypt_data(data, key)
+    # Define the file path within the library folder
+    file_path = os.path.join(LIBRARY_PATH, "encrypted_data.bin")
+
+    # Save encrypted data to a file
+    with open(file_path, "wb") as f:
+        f.write(encrypted_data)
+    print(f"Encrypted data saved to {file_path}")
+
+def load_encrypted_data(seed: str) -> str:
+    # Generate encryption key from the seed
+    key = generate_key_from_seed(seed)
+    # Define the file path within the library folder
+    file_path = os.path.join(LIBRARY_PATH, "encrypted_data.bin")
+
+    # Load and decrypt the data from file
+    with open(file_path, "rb") as f:
+        encrypted_data = f.read()
+    decrypted_data = decrypt_data(encrypted_data, key)
+    return decrypted_data

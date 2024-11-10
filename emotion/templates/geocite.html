@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geocite Interface</title>
+  {% load static %}
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      background-color: #D4BEE4; /* Set the background color */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Container for the sidebar and iframe */
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Sidebar styling */
+    aside.sidebar {
+      background-color: rgba(255, 255, 255, 0.7); /* Transparent white for sidebar */
+      padding: 20px;
+      width: 300px;
+      height: 100%;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    /* Make the iframe resizable */
+    main.display-area {
+      flex-grow: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    iframe {
+      border: 0;
+      width: 100%;
+      height: 100%;
+      resize: both; /* Allow resizing */
+      overflow: auto;
+      position: absolute;
+    }
+
+    /* Optional: Style the sidebar items */
+    label, h2, h3 {
+      font-family: Arial, sans-serif;
+    }
+
+    input[type="text"],
+    input[type="range"],
+    input[type="color"],
+    button {
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .toggle-group button {
+      width: 48%;
+      margin-right: 4%;
+    }
+
+    .toggle-group button:last-child {
+      margin-right: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Geocite</h2>
+      <label>Example Seed</label>
+      <input type="text" id="seedInput" value="ooPhTYsMKHpSyPDbCDKE6baiXj4Ev6PgTDRBy4vrs5a9WCBz1aW" />
+
+      <div class="params">
+        <label>Erosion</label>
+        <input type="range" id="erosionSlider" min="0" max="1" step="0.01" value="0.2" />
+        <label>Aura</label>
+        <input type="color" id="auraColor" value="#e5e678e5" />
+        <button id="refreshButton">Refresh Seed</button>
+      </div>
+
+      <div class="features">
+        <h3>Features</h3>
+        <p>shapeFeature1: <span id="shapeFeature1">12</span></p>
+        <p>shapeFeature2: <span id="shapeFeature2">522</span></p>
+        <p>shapeHash1: <span id="shapeHash1">843</span></p>
+      </div>
+    </aside>
+    
+    <!-- Embed iframe instead of the 3D sphere -->
+    <main class="display-area" id="displayArea">
+      <iframe id="iframe" src="https://shaderpark.com/embed/-OB6K_8WVWExC3n9qJmr" frameborder="0"></iframe>
+    </main>
+  </div>
+
+  <script>
+    // Function to refresh seed value when button is clicked
+    document.getElementById('refreshButton').addEventListener('click', function() {
+      const newSeed = generateRandomSeed(); // You can replace this with your actual logic
+      document.getElementById('seedInput').value = newSeed;
+    });
+
+    // Function to generate random seed (replace with your logic)
+    function generateRandomSeed() {
+      return Math.random().toString(36).substring(2, 18);
+    }
+
+    // Erosion slider effect on iframe (modifying the iframe src or appearance)
+    const erosionSlider = document.getElementById('erosionSlider');
+    const iframe = document.getElementById('iframe');
+    erosionSlider.addEventListener('input', function() {
+      // Get the erosion value
+      const erosionValue = erosionSlider.value;
+
+      // Use the erosion value to modify iframe content (simulate effect)
+      iframe.src = `https://shaderpark.com/embed/-OB6K_8WVWExC3n9qJmr?erosion=${erosionValue}`;
+      
+      // Generate new seed based on erosion value
+      const newSeed = generateRandomSeed();
+      document.getElementById('seedInput').value = newSeed;
+    });
+
+    // Aura color change on color input
+    const auraColor = document.getElementById('auraColor');
+    auraColor.addEventListener('input', function() {
+      // Change iframe background color based on aura color
+      iframe.style.backgroundColor = auraColor.value;
+    });
+  </script>
+</body>
+</html>

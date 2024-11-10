@@ -6,13 +6,8 @@ from .web3 import w3
 
 def store_data(request):
     if request.method == "POST":
-        # Your blockchain interaction logic goes here
-        if w3.is_connected():  # Check if connected
-            # Example: Store data on the blockchain or interact with it
-            # Add your logic here
+        if w3.is_connected():
             return redirect('view_records')
-        else:
-            return render(request, 'error.html', {'message': 'Blockchain connection failed.'})
 
 @login_required(login_url='/login/')
 def upload_record(request):

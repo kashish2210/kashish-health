@@ -1,0 +1,43 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 300px;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+  }
+  
+  .sidebar label, .sidebar h2, .sidebar h3 {
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  .params, .features, .toggle-group {
+    margin-bottom: 20px;
+  }
+  
+  .params input, .features span {
+    display: block;
+  }
+  
+  .display-area {
+    flex: 1;
+    background-color: #1bab5d93;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
