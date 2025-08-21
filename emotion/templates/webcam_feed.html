@@ -16,16 +16,497 @@
             font-size: 16px;
             background-color: #89dc8a;
         }
+        
+        .main-content {
+            display: flex;
+            gap: 20px;
+            margin: 50px auto;
+            padding: 0 30px;
+            max-width: 1400px;
+        }
+        
+        .left-panel {
+            flex: 1;
+            max-width: 450px;
+        }
+        
+        .right-panel {
+            flex: 1;
+        }
+        
         .container {
             width: 100%;
             padding: 30px;
             border: 1px solid rgba(255, 255, 255, 0.5);
-            backdrop-filter:blur(24px);
-            border-radius:8px;
-            display:flex;
-            display:grid;
-            margin: 50px auto;
+            backdrop-filter: blur(24px);
+            border-radius: 8px;
         }
+        
+        /* Tab System Styles */
+        .tab-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(24px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-header {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .tab-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        .tab-content {
+            padding: 0;
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-pane {
+            padding: 25px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Questions Styles */
+        .question-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4ecdc4;
+            transition: all 0.3s ease;
+        }
+        
+        .question-card:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-text {
+            color: white;
+            font-size: 16px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .answer-btn {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .answer-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+        
+        .answer-btn.selected {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-color: transparent;
+        }
+        
+        /* Enhanced Memory Game Styles */
+        .memory-game {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .game-header {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .game-title {
+            color: white;
+            font-size: 26px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.5;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .sequence-display {
+            height: 90px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 12px;
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .sequence-display.active {
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        
+        .psychological-colors {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 25px 0;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .psych-color-btn {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        .psych-color-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+        
+        .psych-color-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+        
+        .psych-color-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .psych-color-btn.active {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
+            animation: pulse 0.6s ease-out;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translateY(-3px) scale(1.05); }
+            50% { transform: translateY(-3px) scale(1.1); }
+            100% { transform: translateY(-3px) scale(1.05); }
+        }
+        
+        .color-label {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        /* Psychological Color Meanings */
+        .energy { 
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+        
+        .calm { 
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        }
+        
+        .growth { 
+            background: linear-gradient(135deg, #95e1d3 0%, #2ed573 100%);
+        }
+        
+        .focus { 
+            background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
+        }
+        
+        .game-controls {
+            margin: 25px 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .game-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .game-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+        }
+        
+        .game-btn.primary:hover {
+            background: linear-gradient(135deg, #7c8cea 0%, #8b5fb2 100%);
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .psychological-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 3px solid #4ecdc4;
+        }
+        
+        .legend-title {
+            color: #4ecdc4;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+        
+        .legend-text {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.3;
+        }
+        
+        /* Game Styles */
+        .scoring-section {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .score-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+            width: 180px;
+            display: inline-block;
+        }
+        
+        .score-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .score-button.refresh-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+        
+        .satisfaction-result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .satisfaction-result.excellent {
+            background: linear-gradient(45deg, #2ed573, #17c0eb);
+        }
+        
+        .satisfaction-result.good {
+            background: linear-gradient(45deg, #5352ed, #3742fa);
+        }
+        
+        .satisfaction-result.fair {
+            background: linear-gradient(45deg, #ffa502, #ff6348);
+        }
+        
+        .satisfaction-result.poor {
+            background: linear-gradient(45deg, #ff4757, #c44569);
+        }
+        
+        .satisfaction-score {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .satisfaction-description {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        /* AI Analysis Styles */
+        .ai-analysis {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            border-left: 3px solid #4ecdc4;
+        }
+        
+        .ai-analysis strong {
+            color: #4ecdc4;
+        }
+        
+        .tab-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .tab-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .tab-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+        
+        .tab-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
         /* Style for pop-up alert */
         #alert-popup {
             position: fixed;
@@ -37,11 +518,61 @@
             border-radius: 10px;
             display: none;
         }
+        
+        /* Loading animation */
+        .loading-spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #4ecdc4;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                padding: 0 15px;
+            }
+            
+            .left-panel, .right-panel {
+                max-width: none;
+            }
+            
+            .psychological-colors {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+                max-width: 100%;
+            }
+            
+            .psych-color-btn {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .score-button {
+                width: 160px;
+                font-size: 14px;
+                margin: 5px 2px;
+            }
+            
+            .game-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
     </style>
     <script>
         // Get the angry_count value passed from the server
         const angryCount = {{ angry_count|default:0 }};
-
         // Redirect to alert.html if angry_count exceeds 50
         if (angryCount > 50) {
             window.location.href = "{% url 'alert' %}";
@@ -69,12 +600,622 @@
         <li><a id="wallet-address" href="#">Wallet: Not connected</a></li>
     </ul>
 
-    <div class="container">
-        <h1>Real-Time Emotion Detection</h1>
-        <img src="{% url 'video_feed' %}" width="50%" alt="Video Feed">
+    <div class="main-content">
+        <!-- Left Panel with Tabs -->
+        <div class="left-panel">
+            <div class="tab-container">
+                <div class="tab-header">
+                    <button class="tab-button active" onclick="switchTab(event, 'questions')">
+                        Psychological Questions
+                    </button>
+                    <button class="tab-button" onclick="switchTab(event, 'game')">
+                        Mind Game
+                    </button>
+                </div>
+                
+                <!-- Questions Tab -->
+                <div id="questions" class="tab-content">
+                    <div class="tab-pane active" id="questions-content">
+                        <!-- Questions will be dynamically loaded here -->
+                        <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.8);">
+                            <div style="font-size: 20px; margin-bottom: 10px;">Loading personalized questions...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game Tab -->
+                <div id="game" class="tab-content">
+                    <div class="tab-pane" id="game-content">
+                        <div class="memory-game">
+                            <div class="game-header">
+                                <h3 class="game-title">Cognitive Memory Assessment</h3>
+                                <p class="game-subtitle">
+                                    Test your working memory and cognitive flexibility through color pattern recognition. Each color represents different psychological states.
+                                </p>
+                            </div>
+                            
+                            <div class="sequence-display" id="sequenceDisplay">
+                                Ready to begin assessment
+                            </div>
+                            
+                            <div class="psychological-colors">
+                                <button class="psych-color-btn energy" onclick="playerInput('energy')">
+                                    <span class="color-label">Energy</span>
+                                </button>
+                                <button class="psych-color-btn calm" onclick="playerInput('calm')">
+                                    <span class="color-label">Calm</span>
+                                </button>
+                                <button class="psych-color-btn growth" onclick="playerInput('growth')">
+                                    <span class="color-label">Growth</span>
+                                </button>
+                                <button class="psych-color-btn focus" onclick="playerInput('focus')">
+                                    <span class="color-label">Focus</span>
+                                </button>
+                            </div>
+                            
+                            <div class="game-controls">
+                                <button class="game-btn primary" onclick="startGame()">Start Assessment</button>
+                                <button class="game-btn" onclick="resetGame()">Reset</button>
+                            </div>
+                            
+                            <div class="game-stats">
+                                <div class="stat-item">
+                                    <div class="stat-label">Level</div>
+                                    <div class="stat-value" id="level">0</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Score</div>
+                                    <div class="stat-value" id="score">0</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Accuracy</div>
+                                    <div class="stat-value" id="accuracy">0%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="psychological-legend">
+                                <div class="legend-title">Color Psychology</div>
+                                <div class="legend-item">
+                                    <div class="legend-color energy"></div>
+                                    <div class="legend-text"><strong>Energy:</strong> Stimulation and motivation</div>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color calm"></div>
+                                    <div class="legend-text"><strong>Calm:</strong> Peace and tranquility</div>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color growth"></div>
+                                    <div class="legend-text"><strong>Growth:</strong> Balance and renewal</div>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color focus"></div>
+                                    <div class="legend-text"><strong>Focus:</strong> Creativity and concentration</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Panel with Video Feed -->
+        <div class="right-panel">
+            <div class="container">
+                <h1>Real-Time Emotion Detection</h1>
+                <img src="{% url 'video_feed' %}" width="100%" alt="Video Feed">
+            </div>
+        </div>
     </div>
 
+    <script>
+        // Global variables for enhanced question management
+        let currentQuestions = [];
+        let userAnswers = [];
 
+        // Tab switching functionality
+        function switchTab(evt, tabName) {
+            // Hide all tab contents
+            var tabContents = document.getElementsByClassName("tab-content");
+            for (var i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            // Remove active class from all tab buttons
+            var tabButtons = document.getElementsByClassName("tab-button");
+            for (var i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            // Show selected tab content and mark button as active
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Load new questions when page loads or when requested
+        async function loadNewQuestions() {
+            try {
+                showLoadingState();
+                const response = await fetch('/get_new_questions/');
+                const data = await response.json();
+                
+                if (data.questions) {
+                    currentQuestions = data.questions;
+                    renderQuestions(data.questions);
+                    clearPreviousAnswers();
+                }
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                // Fallback to default questions
+                loadFallbackQuestions();
+            } finally {
+                hideLoadingState();
+            }
+        }
+
+        // Render questions dynamically
+        function renderQuestions(questions) {
+            const questionsContent = document.getElementById('questions-content');
+            
+            let questionsHTML = '';
+            questions.forEach((question, index) => {
+                questionsHTML += `
+                    <div class="question-card" data-question-index="${index}">
+                        <div class="question-text">${question.text}</div>
+                        <div class="answer-options">
+                            ${question.options.map((option, optionIndex) => `
+                                <button class="answer-btn" 
+                                        onclick="selectAnswer(this, ${index})" 
+                                        data-score="${option.score}"
+                                        data-category="${question.category || 'general'}"
+                                        data-option-index="${optionIndex}">
+                                    ${option.text}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Add the enhanced scoring section
+            questionsHTML += `
+                <div class="scoring-section">
+                    <button class="score-button refresh-btn" onclick="getNewQuestions()">
+                        Get New Questions
+                    </button>
+                    <button class="score-button" onclick="calculateSatisfactionWithAI()">
+                        Get AI Analysis
+                    </button>
+                    <div id="satisfactionResult" class="satisfaction-result" style="display: none;">
+                        <div class="satisfaction-score" id="scoreText"></div>
+                        <div class="satisfaction-description" id="scoreDescription"></div>
+                        <div id="aiAnalysis" class="ai-analysis"></div>
+                    </div>
+                </div>
+            `;
+            
+            questionsContent.innerHTML = questionsHTML;
+        }
+
+        // Enhanced answer selection with question tracking
+        function selectAnswer(button, questionIndex) {
+            // Remove selection from other buttons in the same question
+            const questionCard = button.closest('.question-card');
+            const buttons = questionCard.querySelectorAll('.answer-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            // Add selection to clicked button
+            button.classList.add('selected');
+            
+            // Store the answer
+            userAnswers[questionIndex] = {
+                score: parseInt(button.getAttribute('data-score')),
+                category: button.getAttribute('data-category'),
+                text: button.textContent.trim(),
+                questionText: questionCard.querySelector('.question-text').textContent
+            };
+        }
+
+        // Get new questions function
+        async function getNewQuestions() {
+            await loadNewQuestions();
+            // Scroll to top of questions
+            document.getElementById('questions').scrollTop = 0;
+        }
+
+        // Enhanced satisfaction calculation with AI analysis
+        async function calculateSatisfactionWithAI() {
+            const selectedAnswers = document.querySelectorAll('.answer-btn.selected');
+            
+            if (selectedAnswers.length < currentQuestions.length) {
+                showAlert(`Please answer all ${currentQuestions.length} questions before getting your analysis.`);
+                return;
+            }
+            
+            // Prepare answers data for AI analysis
+            const answersForAnalysis = userAnswers.filter(answer => answer !== undefined);
+            
+            try {
+                showAnalysisLoading();
+                
+                // Send answers to AI for analysis
+                const response = await fetch('/analyze_responses/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        answers: answersForAnalysis
+                    })
+                });
+                
+                const analysisData = await response.json();
+                
+                if (analysisData.error) {
+                    showAlert(analysisData.error);
+                    return;
+                }
+                
+                displayEnhancedResults(analysisData);
+                
+            } catch (error) {
+                console.error('Error getting AI analysis:', error);
+                // Fallback to basic calculation
+                calculateBasicSatisfaction();
+            } finally {
+                hideAnalysisLoading();
+            }
+        }
+
+        // Display enhanced results with AI analysis
+        function displayEnhancedResults(analysisData) {
+            const resultElement = document.getElementById('satisfactionResult');
+            const scoreText = document.getElementById('scoreText');
+            const scoreDescription = document.getElementById('scoreDescription');
+            const aiAnalysisElement = document.getElementById('aiAnalysis');
+            
+            // Display score and basic info
+            scoreText.innerHTML = `
+                ${analysisData.status_text} 
+                <span style="font-size: 18px; opacity: 0.8;">(${analysisData.total_score}/20 points - ${analysisData.percentage.toFixed(1)}%)</span>
+            `;
+            
+            // Display category breakdown
+            let categoryBreakdown = '<div style="margin-top: 10px; font-size: 14px; opacity: 0.9;"><strong>Areas assessed:</strong> ';
+            const categories = Object.keys(analysisData.category_breakdown);
+            categoryBreakdown += categories.map(cat => 
+                `${cat.charAt(0).toUpperCase() + cat.slice(1)} (${(analysisData.category_breakdown[cat]).toFixed(1)}/4)`
+            ).join(', ');
+            categoryBreakdown += '</div>';
+            
+            scoreDescription.innerHTML = categoryBreakdown;
+            
+            // Display AI analysis
+            aiAnalysisElement.innerHTML = `
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <span style="font-size: 18px; margin-right: 8px;">AI Therapist Analysis:</span>
+                </div>
+                <div style="line-height: 1.6; font-style: italic;">
+                    "${analysisData.ai_analysis}"
+                </div>
+            `;
+            
+            resultElement.className = `satisfaction-result ${analysisData.status}`;
+            resultElement.style.display = 'block';
+            
+            // Smooth scroll to result
+            resultElement.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Fallback basic calculation (original function)
+        function calculateBasicSatisfaction() {
+            const selectedAnswers = document.querySelectorAll('.answer-btn.selected');
+            
+            let totalScore = 0;
+            selectedAnswers.forEach(answer => {
+                totalScore += parseInt(answer.getAttribute('data-score'));
+            });
+            
+            const maxScore = currentQuestions.length * 4;
+            const percentage = (totalScore / maxScore) * 100;
+            
+            displaySatisfactionResult(totalScore, percentage, maxScore);
+        }
+
+        // Enhanced display function for basic results
+        function displaySatisfactionResult(score, percentage, maxScore) {
+            const resultElement = document.getElementById('satisfactionResult');
+            const scoreText = document.getElementById('scoreText');
+            const scoreDescription = document.getElementById('scoreDescription');
+            
+            let level, description, className;
+            
+            if (percentage >= 85) {
+                level = "Excellent";
+                description = "You're showing high levels of satisfaction and well-being! Your mental health appears to be in great shape. Keep up the positive habits!";
+                className = "excellent";
+            } else if (percentage >= 70) {
+                level = "Good";
+                description = "You're doing well overall with good satisfaction levels. There might be small areas to improve, but you're on a positive track.";
+                className = "good";
+            } else if (percentage >= 50) {
+                level = "Fair";
+                description = "Your satisfaction levels are moderate. Consider focusing on stress management, sleep quality, or social connections to improve your well-being.";
+                className = "fair";
+            } else {
+                level = "Needs Attention";
+                description = "Your responses suggest you might be experiencing challenges. Consider speaking with a mental health professional or trusted person for support.";
+                className = "poor";
+            }
+            
+            scoreText.textContent = `${level} (${score}/${maxScore} points)`;
+            scoreDescription.textContent = description;
+            
+            resultElement.className = `satisfaction-result ${className}`;
+            resultElement.style.display = 'block';
+            
+            // Clear AI analysis if present
+            const aiAnalysisElement = document.getElementById('aiAnalysis');
+            if (aiAnalysisElement) {
+                aiAnalysisElement.innerHTML = '';
+            }
+            
+            resultElement.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Helper functions for loading states
+        function showLoadingState() {
+            const questionsContent = document.getElementById('questions-content');
+            questionsContent.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.8);">
+                    <div class="loading-spinner"></div>
+                    <div>Generating personalized questions...</div>
+                </div>
+            `;
+        }
+
+        function hideLoadingState() {
+            // Loading state is hidden when new content is rendered
+        }
+
+        function showAnalysisLoading() {
+            const resultElement = document.getElementById('satisfactionResult');
+            const scoreText = document.getElementById('scoreText');
+            const scoreDescription = document.getElementById('scoreDescription');
+            
+            resultElement.className = 'satisfaction-result good';
+            resultElement.style.display = 'block';
+            scoreText.innerHTML = '<div class="loading-spinner"></div> AI is analyzing your responses...';
+            scoreDescription.innerHTML = 'Please wait while our AI therapist prepares your personalized analysis.';
+        }
+
+        function hideAnalysisLoading() {
+            // Loading state is hidden when results are displayed
+        }
+
+        function clearPreviousAnswers() {
+            userAnswers = [];
+            // Clear any existing results
+            const resultElement = document.getElementById('satisfactionResult');
+            if (resultElement) {
+                resultElement.style.display = 'none';
+            }
+        }
+
+        function showAlert(message) {
+            alert(message);
+        }
+
+        // Load fallback questions if API fails
+        function loadFallbackQuestions() {
+            const fallbackQuestions = [
+                {
+                    "text": "How would you rate your overall mood today?",
+                    "category": "mood",
+                    "options": [
+                        {"text": "Excellent - feeling very positive", "score": 4},
+                        {"text": "Good - generally positive", "score": 3},
+                        {"text": "Neutral - neither good nor bad", "score": 2},
+                        {"text": "Poor - feeling down", "score": 1}
+                    ]
+                },
+                {
+                    "text": "How well did you sleep last night?",
+                    "category": "sleep",
+                    "options": [
+                        {"text": "Very well - 7-9 hours of quality sleep", "score": 4},
+                        {"text": "Fairly well - some minor interruptions", "score": 3},
+                        {"text": "Poorly - frequent wake-ups", "score": 2},
+                        {"text": "Very poorly - little to no sleep", "score": 1}
+                    ]
+                },
+                {
+                    "text": "How stressed do you feel right now?",
+                    "category": "stress",
+                    "options": [
+                        {"text": "Not stressed at all", "score": 4},
+                        {"text": "Slightly stressed", "score": 3},
+                        {"text": "Moderately stressed", "score": 2},
+                        {"text": "Very stressed", "score": 1}
+                    ]
+                },
+                {
+                    "text": "How connected do you feel to others today?",
+                    "category": "social",
+                    "options": [
+                        {"text": "Very connected - strong social bonds", "score": 4},
+                        {"text": "Somewhat connected", "score": 3},
+                        {"text": "Slightly isolated", "score": 2},
+                        {"text": "Very isolated and lonely", "score": 1}
+                    ]
+                },
+                {
+                    "text": "How satisfied are you with your current life situation?",
+                    "category": "satisfaction",
+                    "options": [
+                        {"text": "Very satisfied", "score": 4},
+                        {"text": "Mostly satisfied", "score": 3},
+                        {"text": "Somewhat dissatisfied", "score": 2},
+                        {"text": "Very dissatisfied", "score": 1}
+                    ]
+                }
+            ];
+            
+            currentQuestions = fallbackQuestions;
+            renderQuestions(fallbackQuestions);
+            clearPreviousAnswers();
+        }
+
+        // Auto-load new questions when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show questions tab by default
+            document.getElementById('questions').classList.add('active');
+            // Load new questions after a short delay to ensure page is ready
+            setTimeout(loadNewQuestions, 500);
+        });
+
+        // Enhanced Memory Game Logic with psychological color mapping
+        let gameSequence = [];
+        let playerSequence = [];
+        let level = 0;
+        let score = 0;
+        let totalAttempts = 0;
+        let correctAttempts = 0;
+        let isShowingSequence = false;
+        let gameStarted = false;
+
+        const psychColors = ['energy', 'calm', 'growth', 'focus'];
+        const colorDisplayNames = {
+            'energy': 'ENERGY',
+            'calm': 'CALM', 
+            'growth': 'GROWTH',
+            'focus': 'FOCUS'
+        };
+        
+        const sequenceDisplay = document.getElementById('sequenceDisplay');
+
+        function startGame() {
+            gameSequence = [];
+            playerSequence = [];
+            level = 1;
+            score = 0;
+            totalAttempts = 0;
+            correctAttempts = 0;
+            gameStarted = true;
+            updateDisplay();
+            nextRound();
+        }
+
+        function resetGame() {
+            gameSequence = [];
+            playerSequence = [];
+            level = 0;
+            score = 0;
+            totalAttempts = 0;
+            correctAttempts = 0;
+            gameStarted = false;
+            sequenceDisplay.textContent = "Ready to begin assessment";
+            sequenceDisplay.classList.remove('active');
+            updateDisplay();
+        }
+
+        function nextRound() {
+            playerSequence = [];
+            const nextColor = psychColors[Math.floor(Math.random() * psychColors.length)];
+            gameSequence.push(nextColor);
+            showSequence();
+        }
+
+        function showSequence() {
+            isShowingSequence = true;
+            sequenceDisplay.classList.add('active');
+            let i = 0;
+            
+            const showNext = () => {
+                if (i < gameSequence.length) {
+                    const color = gameSequence[i];
+                    sequenceDisplay.textContent = colorDisplayNames[color];
+                    
+                    // Flash the corresponding button
+                    const button = document.querySelector(`.${color}`);
+                    button.classList.add('active');
+                    
+                    setTimeout(() => {
+                        sequenceDisplay.textContent = '';
+                        button.classList.remove('active');
+                        i++;
+                        setTimeout(showNext, 400);
+                    }, 800);
+                } else {
+                    isShowingSequence = false;
+                    sequenceDisplay.classList.remove('active');
+                    sequenceDisplay.textContent = "Repeat the sequence";
+                }
+            };
+            
+            setTimeout(showNext, 800);
+        }
+
+        function playerInput(color) {
+            if (!gameStarted || isShowingSequence) return;
+            
+            playerSequence.push(color);
+            totalAttempts++;
+            
+            // Flash the button
+            const button = document.querySelector(`.${color}`);
+            button.classList.add('active');
+            setTimeout(() => button.classList.remove('active'), 300);
+            
+            // Check if the sequence matches so far
+            const currentIndex = playerSequence.length - 1;
+            if (playerSequence[currentIndex] !== gameSequence[currentIndex]) {
+                gameOver();
+                return;
+            }
+            
+            correctAttempts++;
+            
+            // Check if the player completed the sequence
+            if (playerSequence.length === gameSequence.length) {
+                score += 15 * level;
+                level++;
+                updateDisplay();
+                sequenceDisplay.textContent = "Excellent! Preparing next level...";
+                setTimeout(nextRound, 2000);
+            }
+        }
+
+        function gameOver() {
+            sequenceDisplay.textContent = "Assessment complete. Review your cognitive performance above.";
+            sequenceDisplay.classList.remove('active');
+            gameStarted = false;
+            
+            // Provide feedback based on performance
+            setTimeout(() => {
+                const accuracy = totalAttempts > 0 ? (correctAttempts / totalAttempts * 100).toFixed(1) : 0;
+                let feedback = "";
+                
+                if (level >= 5) {
+                    feedback = "Exceptional cognitive performance demonstrated.";
+                } else if (level >= 3) {
+                    feedback = "Good working memory and focus abilities shown.";
+                } else {
+                    feedback = "Consider cognitive exercises to improve memory retention.";
+                }
+                
+                sequenceDisplay.textContent = feedback;
+            }, 3000);
+        }
+
+        function updateDisplay() {
+            document.getElementById('level').textContent = level;
+            document.getElementById('score').textContent = score;
+            
+            const accuracy = totalAttempts > 0 ? (correctAttempts / totalAttempts * 100).toFixed(0) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+        }
+    </script>
+    
     <script src="{% static 'web3.js' %}"></script>
 </body>
 </html>
