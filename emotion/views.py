@@ -1,3 +1,4 @@
+
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -13,6 +14,312 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
 import time
+import google.generativeai as genai
+import json
+import random
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+genai.configure(api_key="AIzaSyBxTtDK9FF2bVo5PPmJsHbM_JAViE7X-d0")
+gemini_model = genai.GenerativeModel("gemini-2.0-flash-exp")
+
+
+import json
+import random
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+# --- Utility for extracting Gemini response text ---
+def extract_text_from_response(response):
+    """Safely extract text from Gemini response"""
+    if hasattr(response, "text") and response.text:
+        return response.text
+    try:
+        return response.candidates[0].content.parts[0].text
+    except Exception:
+        return ""
+
+
+# --- Psychological Question Generator ---
+def generate_psychological_questions():
+    """Generate psychological questions using Gemini AI"""
+    try:
+        question_themes = [
+            "anxiety and worry patterns",
+            "emotional regulation and mood",
+            "social relationships and support",
+            "work-life balance and stress",
+            "self-esteem and confidence",
+            "sleep and physical well-being",
+            "motivation and life purpose",
+            "coping mechanisms and resilience"
+        ]
+
+        selected_themes = random.sample(question_themes, 5)
+
+        prompt = f"""
+        Generate 5 unique psychological well-being assessment questions in JSON format. 
+        Focus on these themes: {', '.join(selected_themes)}.
+
+        Each question should have:
+        1. A clear, empathetic, professional question text
+        2. 4 answer options with scores (4=best mental health, 1=concerning mental health)
+        3. Questions should feel like they come from a caring therapist
+        4. Avoid repetitive phrasing - make each question unique
+        5. Include varied question styles (frequency, intensity, coping, relationships)
+
+        Return ONLY valid JSON in this exact format:
+        {{
+            "questions": [
+                {{
+                    "text": "question text here",
+                    "category": "theme category",
+                    "options": [
+                        {{"text": "option 1", "score": 4}},
+                        {{"text": "option 2", "score": 3}},
+                        {{"text": "option 3", "score": 2}},
+                        {{"text": "option 4", "score": 1}}
+                    ]
+                }}
+            ]
+        }}
+        """
+
+        response = gemini_model.generate_content(prompt)
+        response_text = extract_text_from_response(response)
+
+        if not response_text.strip():
+            raise ValueError("Empty response from Gemini")
+
+        try:
+            questions_data = json.loads(response_text)
+            if "questions" not in questions_data:
+                raise ValueError("Response missing 'questions' key")
+            return questions_data
+        except json.JSONDecodeError:
+            raise ValueError("Invalid JSON from Gemini")
+
+    except Exception as e:
+        print(f"Error generating questions: {e}")
+
+        # --- Fallback questions (safe minimum set) ---
+        fallback_questions = [
+            {
+                "text": "How often do you feel overwhelmed by daily responsibilities?",
+                "category": "stress",
+                "options": [
+                    {"text": "Rarely or never", "score": 4},
+                    {"text": "Sometimes", "score": 3},
+                    {"text": "Often", "score": 2},
+                    {"text": "Almost always", "score": 1},
+                ],
+            },
+            {
+                "text": "How connected do you feel to your support system (friends/family)?",
+                "category": "relationships",
+                "options": [
+                    {"text": "Very connected", "score": 4},
+                    {"text": "Somewhat connected", "score": 3},
+                    {"text": "Not very connected", "score": 2},
+                    {"text": "Not connected at all", "score": 1},
+                ],
+            },
+            {
+                "text": "How well do you sleep at night?",
+                "category": "sleep",
+                "options": [
+                    {"text": "Very well, restful sleep", "score": 4},
+                    {"text": "Mostly okay, some issues", "score": 3},
+                    {"text": "Poor, frequent issues", "score": 2},
+                    {"text": "Very poor, hardly restful", "score": 1},
+                ],
+            },
+            {
+                "text": "How confident do you feel in handling challenges?",
+                "category": "confidence",
+                "options": [
+                    {"text": "Very confident", "score": 4},
+                    {"text": "Fairly confident", "score": 3},
+                    {"text": "Sometimes confident", "score": 2},
+                    {"text": "Rarely confident", "score": 1},
+                ],
+            },
+            {
+                "text": "How motivated do you feel to pursue your goals?",
+                "category": "motivation",
+                "options": [
+                    {"text": "Highly motivated", "score": 4},
+                    {"text": "Somewhat motivated", "score": 3},
+                    {"text": "Occasionally motivated", "score": 2},
+                    {"text": "Not motivated", "score": 1},
+                ],
+            },
+        ]
+
+        return {
+            "questions": random.sample(
+                fallback_questions, min(5, len(fallback_questions))
+            )
+        }
+
+
+# --- AI Therapist Analysis ---
+def generate_ai_therapist_analysis(answers_data):
+    """Generate personalized analysis using Gemini AI"""
+    try:
+        total_score = answers_data.get("total_score", 0)
+        percentage = answers_data.get("percentage", 0)
+        categories = answers_data.get("categories", {})
+
+        prompt = f"""
+        You are a compassionate AI therapist analyzing a patient's psychological well-being assessment.
+
+        Assessment Results:
+        - Total Score: {total_score}/20 ({percentage:.1f}%)
+        - Category breakdown: {categories}
+
+        Provide a personalized, empathetic response that includes:
+        1. A warm, professional greeting
+        2. Acknowledgment of their current state
+        3. 2-3 specific, actionable recommendations based on their responses
+        4. Encouraging words about their potential for growth
+        5. A gentle reminder about professional support if needed
+
+        Keep response between 100-150 words. Use a caring, therapeutic tone.
+        Focus on strengths while addressing areas for improvement.
+
+        Return as plain text, not JSON.
+        """
+
+        response = gemini_model.generate_content(prompt)
+        response_text = extract_text_from_response(response)
+        return response_text.strip() if response_text else "I'm here to support you. Please remember you're not alone, and professional help is always available if needed."
+
+    except Exception as e:
+        print(f"Error generating AI analysis: {e}")
+        # fallback simplified analysis
+        percentage = answers_data.get("percentage", 0)
+        if percentage >= 85:
+            return "You're showing remarkable resilience and emotional well-being! ..."
+        elif percentage >= 70:
+            return "You're demonstrating good emotional balance with some areas for gentle attention. ..."
+        elif percentage >= 50:
+            return "Thank you for your honest responses. You're showing awareness of your emotional state..."
+        else:
+            return "I appreciate your openness in sharing your experiences. Your responses suggest you may be going through a challenging time..."
+
+
+# --- Django Views ---
+@csrf_exempt
+def get_new_questions(request):
+    if request.method == "GET":
+        questions_data = generate_psychological_questions()
+        return JsonResponse(questions_data)
+    return JsonResponse({"error": "Invalid request method"})
+
+
+@csrf_exempt
+def analyze_responses(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            answers = data.get("answers", [])
+
+            if len(answers) != 5:
+                return JsonResponse({"error": "Please answer all questions"})
+
+            total_score = sum(answer["score"] for answer in answers)
+            max_score = 20
+            percentage = (total_score / max_score) * 100
+
+            # group by category
+            categories = {}
+            for answer in answers:
+                category = answer.get("category", "general")
+                categories.setdefault(category, []).append(answer["score"])
+
+            category_averages = {
+                cat: sum(scores) / len(scores) for cat, scores in categories.items()
+            }
+
+            analysis_data = {
+                "total_score": total_score,
+                "percentage": percentage,
+                "categories": category_averages,
+            }
+
+            ai_analysis = generate_ai_therapist_analysis(analysis_data)
+
+            if percentage >= 85:
+                status, status_text = "excellent", "Excellent"
+            elif percentage >= 70:
+                status, status_text = "good", "Good"
+            elif percentage >= 50:
+                status, status_text = "fair", "Fair"
+            else:
+                status, status_text = "poor", "Needs Attention"
+
+            return JsonResponse(
+                {
+                    "total_score": total_score,
+                    "percentage": percentage,
+                    "status": status,
+                    "status_text": status_text,
+                    "ai_analysis": ai_analysis,
+                    "category_breakdown": category_averages,
+                }
+            )
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON data"})
+        except Exception as e:
+            return JsonResponse({"error": f"Analysis error: {str(e)}"})
+
+    return JsonResponse({"error": "Invalid request method"})
+
+
+# --- Stress Insights ---
+def get_stress_insights(score_percentage):
+    if score_percentage >= 85:
+        return {
+            "level": "Low Stress",
+            "color": "#2ed573",
+            "recommendations": [
+                "Maintain current healthy habits",
+                "Continue stress management practices",
+                "Share your strategies with others",
+            ],
+        }
+    elif score_percentage >= 70:
+        return {
+            "level": "Mild Stress",
+            "color": "#5352ed",
+            "recommendations": [
+                "Practice deep breathing exercises",
+                "Ensure adequate sleep (7-9 hours)",
+                "Engage in regular physical activity",
+            ],
+        }
+    elif score_percentage >= 50:
+        return {
+            "level": "Moderate Stress",
+            "color": "#ffa502",
+            "recommendations": [
+                "Try mindfulness or meditation",
+                "Limit caffeine and alcohol",
+                "Connect with supportive friends/family",
+            ],
+        }
+    else:
+        return {
+            "level": "High Stress",
+            "color": "#ff4757",
+            "recommendations": [
+                "Consider professional counseling",
+                "Practice stress-reduction techniques daily",
+                "Prioritize self-care and rest",
+            ],
+        }
 
 FRAME_INTERVAL = 5  # Process every 5th frame
 frame_count = 0
