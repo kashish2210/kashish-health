@@ -11,4 +11,6 @@ urlpatterns = [
     path('alert/chatbot//', user_views.chatbot_view, name='chatbot'),
     path('alert/multilingual/', views.multilingual, name='multilingual'),
     path('geocite/', views.geocite_interface, name='geocite_interface'),
+    path('get_new_questions/', views.get_new_questions, name='get_new_questions'),
+    path('analyze_responses/', views.analyze_responses, name='analyze_responses'),
 ]
