@@ -1,3 +1,9 @@
+# At the very top of your views.py file, define your API key as a constant
+API_KEY = "AIzaSyBxTtDK9FF2bVo5PPmJsHbM_JAViE7X-d0"  # Replace with your actual new API key
+
+import logging
+logger = logging.getLogger(__name__)
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -15,8 +21,13 @@ from django.urls import reverse
 from django.http import StreamingHttpResponse, JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import google.generativeai as genai
+from django.contrib.auth import login
+from django.core.files.storage import FileSystemStorage
+from PyPDF2 import PdfReader
 
-apiKey = "AIzaSyA2i4KZU4YzGty_GN0-obC07e_ufWPlxdg"
+# Configure with your API key
+genai.configure(api_key=API_KEY)
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 DATA_FILE_PATH = 'emotion_data.json'
 # Custom User Model
@@ -43,7 +54,7 @@ def register_patient(request):
             user = form.save(commit=False)
             user.is_doctor = False
             user.save()
-            auth_login(request, user)  # Log in after registration
+            login(request, user)  # Log in after registration
             return redirect('dashboard')  # Redirect to the dashboard
     else:
         form = CustomUserCreationForm()
@@ -56,7 +67,7 @@ def register_doctor(request):
             user = form.save(commit=False)
             user.is_doctor = True
             user.save()
-            auth_login(request, user)  # Log in after registration
+            login(request, user)  # Log in after registration
             return redirect('dashboard')  # Redirect to the dashboard
     else:
         form = CustomUserCreationForm()
@@ -141,9 +152,9 @@ def dashboard(request):
     }
 
     return render(request, 'dashboard.html', context)
+
 def register_selection(request):
     return render(request, 'register_selection.html')
-
 
 @csrf_exempt
 def summarize(request):
@@ -156,7 +167,8 @@ def summarize(request):
         + article
     )
 
-    genai.configure(api_key=apiKey)
+    # Use the consistent API key
+    genai.configure(api_key=API_KEY)
     generation_config = {
         "temperature": 1,
         "top_p": 0.95,
@@ -174,22 +186,17 @@ def summarize(request):
 
     response = chat_session.send_message(prompt)
 
-    jsonResult = {"result" : response.text}
+    jsonResult = {"result": response.text}
     
     return JsonResponse(jsonResult)
 
-
-from django.core.files.storage import FileSystemStorage
-
-from PyPDF2 import PdfReader
-
 def get_pdf_text(pdf_docs):
-    text=""
+    text = ""
     for pdf in pdf_docs:
-        pdf_reader= PdfReader(pdf)
+        pdf_reader = PdfReader(pdf)
         for page in pdf_reader.pages:
-            text+= page.extract_text()
-    return  text
+            text += page.extract_text()
+    return text
 
 def upload(request):
     return render(request, 'fileupload.html')
@@ -206,7 +213,7 @@ def upload_file(request):
             reader = PdfReader(pdf_file)
             text = ''
             for page in reader.pages:
-                text+= page.extract_text()
+                text += page.extract_text()
 
         numOfWords = 150
         prompt = (
@@ -214,7 +221,8 @@ def upload_file(request):
             + text
         )
 
-        genai.configure(api_key=apiKey)
+        # Use the consistent API key
+        genai.configure(api_key=API_KEY)
         generation_config = {
             "temperature": 1,
             "top_p": 0.95,
@@ -234,55 +242,60 @@ def upload_file(request):
         return HttpResponse(response.text)
     return render(request, 'fileupload.html')
 
-
-from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
-import google.generativeai as genai
-import os
-import json
-from django.http import JsonResponse
-
-
+# Chatbot functionality
 chat_history = []
-genai.configure(api_key="AIzaSyA2i4KZU4YzGty_GN0-obC07e_ufWPlxdg")
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+# Configure with consistent API key for chatbot
+genai.configure(api_key=API_KEY)
+chatbot_model = genai.GenerativeModel("gemini-1.5-flash")
 
 @csrf_exempt
 def chatbot_view(request):
     global chat_history  # Access the global chat history
 
     if request.method == "POST":
-        data = json.loads(request.body)
-        user_message = data.get("user_message")
-
-        if user_message:
-
-            prompt = f""""Here's a question from a user who may be struggling with mental health. '{user_message}'. 
-              The user might be expressing distress, sadness, confusion, or other sensitive emotions. 
-              Your response should be empathetic, supportive, and non-judgmental, treating the user with care and understanding. 
-              Offer gentle encouragement, listen actively, and provide comforting and professional advice where appropriate. 
-              You are a virtual therapist, not a bot. Your goal is to provide mental health support with compassion and kindness.
-
-              Here is the history of the conversation, including previous responses from both the user and the therapist:
-              {str(chat_history)}. Make sure that the tone remains respectful, kind, and professional. 
-              Your response should address the user's concerns and provide support in a therapeutic manner. 
-              The goal is not to solve everything but to provide a safe space and guide the user to feel heard and understood."""
-
-            # Generate the response using the model
-            response = model.generate_content(prompt)
-            # Add the user message to chat history
-            chat_history.append({"user": "user", "text": user_message})
-
-            # Extract the response from the model output
+        try:
+            print("=== CHATBOT DEBUG START ===")
+            print(f"Request method: {request.method}")
+            print(f"Request body: {request.body}")
+            print(f"API_KEY set: {'Yes' if API_KEY and API_KEY != 'YOUR_NEW_API_KEY_HERE' else 'No'}")
+            
+            # First, let's return a simple response to test basic functionality
+            data = json.loads(request.body)
+            user_message = data.get("user_message", "")
+            
+            print(f"User message received: {user_message}")
+            
+            # Configure API
+            genai.configure(api_key=API_KEY)
+            model_instance = genai.GenerativeModel("gemini-1.5-flash")
+            
+            # Simple prompt for testing
+            simple_prompt = f"Please respond empathetically to this message: {user_message}"
+            
+            print("Generating AI response...")
+            response = model_instance.generate_content(simple_prompt)
+            print("AI response generated successfully")
+            
             bot_response = response.text
-
-            # Add the bot response to chat history
+            
+            # Add to chat history
+            chat_history.append({"user": "user", "text": user_message})
             chat_history.append({"user": "bot", "text": bot_response})
+            
+            print(f"Returning response: {bot_response[:50]}...")
+            print("=== CHATBOT DEBUG END ===")
+            
+            return JsonResponse({"response": bot_response})
+                
+        except Exception as e:
+            print(f"=== ERROR DETAILS ===")
+            print(f"Error: {str(e)}")
+            print(f"Error type: {type(e).__name__}")
+            import traceback
+            traceback.print_exc()
+            print(f"=== ERROR END ===")
+            return JsonResponse({"error": f"Server error: {str(e)}"}, status=500)
 
-        # Return the generated response in JSON format
-        return JsonResponse({"response": bot_response})
-
-    # Pass the chat history to the template
+    # GET request
     return render(request, "chatbot.html", {"chat_history": chat_history})
-
