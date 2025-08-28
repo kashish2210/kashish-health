@@ -11,4 +11,4 @@ djangorestframework
 django
 ipfshttpclient
 web3
-
+cryptography
